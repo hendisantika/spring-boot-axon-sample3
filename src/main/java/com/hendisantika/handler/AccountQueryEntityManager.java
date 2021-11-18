@@ -42,4 +42,19 @@ public class AccountQueryEntityManager {
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() :
                 new AccountQueryEntity();
     }
+
+    private AccountQueryEntity buildQueryAccount(AccountAggregate accountAggregate) {
+        AccountQueryEntity accountQueryEntity = findExistingOrCreateQueryAccount(accountAggregate.getId());
+
+        accountQueryEntity.setId(accountAggregate.getId());
+        accountQueryEntity.setAccountBalance(accountAggregate.getAccountBalance());
+        accountQueryEntity.setCurrency(accountAggregate.getCurrency());
+        accountQueryEntity.setStatus(accountAggregate.getStatus());
+
+        return accountQueryEntity;
+    }
+
+    private void persistAccount(AccountQueryEntity accountQueryEntity) {
+        accountRepository.save(accountQueryEntity);
+    }
 }
