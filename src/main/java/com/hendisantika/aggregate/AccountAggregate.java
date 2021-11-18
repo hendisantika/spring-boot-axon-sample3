@@ -1,7 +1,11 @@
 package com.hendisantika.aggregate;
 
+import com.hendisantika.command.CreateAccountCommand;
+import com.hendisantika.event.AccountCreatedEvent;
 import lombok.Data;
+import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
 /**
@@ -24,4 +28,10 @@ public class AccountAggregate {
     private String currency;
 
     private String status;
+
+    @CommandHandler
+    public AccountAggregate(CreateAccountCommand createAccountCommand) {
+        AggregateLifecycle.apply(new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance
+                , createAccountCommand.currency));
+    }
 }
