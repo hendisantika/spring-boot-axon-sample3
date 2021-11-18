@@ -8,7 +8,9 @@ import com.hendisantika.event.AccountCreatedEvent;
 import com.hendisantika.event.AccountHeldEvent;
 import com.hendisantika.event.MoneyCreditedEvent;
 import com.hendisantika.event.MoneyDebitedEvent;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -26,6 +28,8 @@ import org.axonframework.spring.stereotype.Aggregate;
  */
 @Aggregate
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountAggregate {
     @AggregateIdentifier
     private String id;
