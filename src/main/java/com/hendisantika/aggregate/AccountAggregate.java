@@ -2,9 +2,11 @@ package com.hendisantika.aggregate;
 
 import com.hendisantika.command.CreateAccountCommand;
 import com.hendisantika.command.CreditMoneyCommand;
+import com.hendisantika.command.DebitMoneyCommand;
 import com.hendisantika.event.AccountActivatedEvent;
 import com.hendisantika.event.AccountCreatedEvent;
 import com.hendisantika.event.MoneyCreditedEvent;
+import com.hendisantika.event.MoneyDebitedEvent;
 import lombok.Data;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -68,5 +70,11 @@ public class AccountAggregate {
         }
 
         this.accountBalance += moneyCreditedEvent.creditAmount;
+    }
+
+    @CommandHandler
+    protected void on(DebitMoneyCommand debitMoneyCommand) {
+        AggregateLifecycle.apply(new MoneyDebitedEvent(debitMoneyCommand.id, debitMoneyCommand.debitAmount,
+                debitMoneyCommand.currency));
     }
 }
