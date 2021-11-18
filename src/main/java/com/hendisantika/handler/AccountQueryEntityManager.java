@@ -1,7 +1,12 @@
 package com.hendisantika.handler;
 
+import com.hendisantika.aggregate.AccountAggregate;
+import com.hendisantika.event.BaseEvent;
 import com.hendisantika.repository.AccountRepository;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,5 +23,15 @@ public class AccountQueryEntityManager {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    @Qualifier("accountAggregateEventSourcingRepository")
+    private EventSourcingRepository<AccountAggregate> accountAggregateEventSourcingRepository;
+
+    @EventSourcingHandler
+    void on(BaseEvent event) {
+        persistAccount(buildQueryAccount(getAccountFromEvent(event)));
+    }
+
 
 }
