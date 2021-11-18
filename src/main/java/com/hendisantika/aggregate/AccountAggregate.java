@@ -46,4 +46,9 @@ public class AccountAggregate {
 
         AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
     }
+
+    @EventSourcingHandler
+    protected void on(AccountActivatedEvent accountActivatedEvent) {
+        this.status = String.valueOf(accountActivatedEvent.status);
+    }
 }
