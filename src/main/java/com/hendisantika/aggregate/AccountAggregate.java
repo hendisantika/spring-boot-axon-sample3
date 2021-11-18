@@ -1,8 +1,10 @@
 package com.hendisantika.aggregate;
 
 import com.hendisantika.command.CreateAccountCommand;
+import com.hendisantika.command.CreditMoneyCommand;
 import com.hendisantika.event.AccountActivatedEvent;
 import com.hendisantika.event.AccountCreatedEvent;
+import com.hendisantika.event.MoneyCreditedEvent;
 import lombok.Data;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -50,5 +52,11 @@ public class AccountAggregate {
     @EventSourcingHandler
     protected void on(AccountActivatedEvent accountActivatedEvent) {
         this.status = String.valueOf(accountActivatedEvent.status);
+    }
+
+    @CommandHandler
+    protected void on(CreditMoneyCommand creditMoneyCommand) {
+        AggregateLifecycle.apply(new MoneyCreditedEvent(creditMoneyCommand.id, creditMoneyCommand.creditAmount,
+                creditMoneyCommand.currency));
     }
 }
