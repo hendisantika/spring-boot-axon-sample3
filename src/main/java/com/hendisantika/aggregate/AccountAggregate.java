@@ -5,6 +5,7 @@ import com.hendisantika.command.CreditMoneyCommand;
 import com.hendisantika.command.DebitMoneyCommand;
 import com.hendisantika.event.AccountActivatedEvent;
 import com.hendisantika.event.AccountCreatedEvent;
+import com.hendisantika.event.AccountHeldEvent;
 import com.hendisantika.event.MoneyCreditedEvent;
 import com.hendisantika.event.MoneyDebitedEvent;
 import lombok.Data;
@@ -76,5 +77,16 @@ public class AccountAggregate {
     protected void on(DebitMoneyCommand debitMoneyCommand) {
         AggregateLifecycle.apply(new MoneyDebitedEvent(debitMoneyCommand.id, debitMoneyCommand.debitAmount,
                 debitMoneyCommand.currency));
+    }
+
+    @EventSourcingHandler
+    protected void on(MoneyDebitedEvent moneyDebitedEvent) {
+
+        if (this.accountBalance >= 0 & (this.accountBalance - moneyDebitedEvent.debitAmount) < 0) {
+            AggregateLifecycle.apply(new AccountHeldEvent(this.id, Status.HOLD));
+        }
+
+        this.accountBalance -= moneyDebitedEvent.debitAmount;
+
     }
 }
