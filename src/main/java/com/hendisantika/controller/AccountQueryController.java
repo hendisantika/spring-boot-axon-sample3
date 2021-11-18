@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : spring-boot-axon-sample3
@@ -31,5 +33,10 @@ public class AccountQueryController {
     @GetMapping("/{accountNumber}")
     public AccountQueryEntity getAccount(@PathVariable(value = "accountNumber") String accountNumber) {
         return accountQueryService.getAccount(accountNumber);
+    }
+
+    @GetMapping("/{accountNumber}/events")
+    public List<Object> listEventsForAccount(@PathVariable(value = "accountNumber") String accountNumber) {
+        return accountQueryService.listEventsForAccount(accountNumber);
     }
 }
