@@ -1,9 +1,12 @@
 package com.hendisantika.controller;
 
 import com.hendisantika.dto.AccountCreateDTO;
+import com.hendisantika.dto.MoneyCreditDTO;
 import com.hendisantika.service.command.AccountCommandService;
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +36,11 @@ public class AccountCommandController {
     @PostMapping
     public CompletableFuture<String> createAccount(@RequestBody AccountCreateDTO accountCreateDTO) {
         return accountCommandService.createAccount(accountCreateDTO);
+    }
+
+    @PutMapping(value = "/credits/{accountNumber}")
+    public CompletableFuture<String> creditMoneyToAccount(@PathVariable(value = "accountNumber") String accountNumber,
+                                                          @RequestBody MoneyCreditDTO moneyCreditDTO) {
+        return accountCommandService.creditMoneyToAccount(accountNumber, moneyCreditDTO);
     }
 }
