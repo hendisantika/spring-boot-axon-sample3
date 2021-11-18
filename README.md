@@ -53,3 +53,47 @@ actions. However, this view might differ from the underlying domain model.
 
 CQRS starts to make sense when you see a need to split your conceptual or domain model into separate model for updates
 and reads.
+
+### Event Sourcing and CQRS
+
+Often times, **Event Sourcing and CQRS** are used in conjunction with each other. Together, a combination of these two
+patterns can become a powerful tool for programmers.
+
+In fact, it is often a critical requirement that an event sourced system also uses CQRS. It is harder to query an event
+sourced system. And hence, an efficient query store might be an indispensable need.
+
+Some of the advantages of using Event Sourcing and CQRS are:
+
+* You can scale up the command (or update) side separately than your query (or read) side. This could be a great
+  advantage for a system where reads outnumber writes by a huge margin.
+* You can chose different strategies for event store and query store. For example, event store can be a typical RDBMS.
+  You can handle queries using NoSQL database (like MongoDB).
+* Using Event Sourcing and CQRS together, you can basically get rid of data aggregation pattern.
+
+### Event Sourcing and CQRS – A Classic Implementation Approach
+
+Event Sourcing and CQRS are basically two separate patterns serving a common use-case. Ideally, we should implement them
+as two separate applications. Below is a high-level view of how such an implementation can look like:
+
+![CRQS](img/cqrs.png "CQRS")
+
+Let’s understand what’s happening in this diagram
+
+* We have a command handler. Basically, all command requests are received here.
+* The command processing part takes care of handling all the commands and generating appropriate events. The events are
+  persisted in the event store. Of course, validations and enforcement of business rules care performed before the
+  events are persisted. Also, after the events are persisted, they are published on a message queue.
+* The messaging queue could be a broker like RabbitMQ or Kafka.
+* The Query Processing application listens to the events. Basically, this application takes the event payload and
+  persists the data in the query store based on the required read models.
+* The query handler part handles the incoming read requests. It retrieves the data from the query store and outputs it.
+
+### How do we implement Event Sourcing and CQRS?
+
+While the implementation diagram shown is the best way to implement Event Sourcing and CQRS, we will first implement it
+on a smaller level. Basically, we will perform Event Sourcing and CQRS in the same application.
+
+We will be using Spring Boot for our normal application logic. However, for Event Sourcing and CQRS we will be using
+Axon Framework. Since we are using the same application for both Event Sourcing and CQRS, we will be using RDBMS (in
+this case an in-memory H2 database) as both a event store and query store. To connect to the database, we will leverage
+Spring Data JPA.
