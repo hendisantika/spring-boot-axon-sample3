@@ -1,7 +1,10 @@
 package com.hendisantika.controller;
 
+import com.hendisantika.entity.AccountQueryEntity;
 import com.hendisantika.service.query.AccountQueryService;
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +26,10 @@ public class AccountQueryController {
 
     public AccountQueryController(AccountQueryService accountQueryService) {
         this.accountQueryService = accountQueryService;
+    }
+
+    @GetMapping("/{accountNumber}")
+    public AccountQueryEntity getAccount(@PathVariable(value = "accountNumber") String accountNumber) {
+        return accountQueryService.getAccount(accountNumber);
     }
 }
