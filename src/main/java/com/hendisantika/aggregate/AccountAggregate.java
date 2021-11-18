@@ -59,4 +59,14 @@ public class AccountAggregate {
         AggregateLifecycle.apply(new MoneyCreditedEvent(creditMoneyCommand.id, creditMoneyCommand.creditAmount,
                 creditMoneyCommand.currency));
     }
+
+    @EventSourcingHandler
+    protected void on(MoneyCreditedEvent moneyCreditedEvent) {
+
+        if (this.accountBalance < 0 & (this.accountBalance + moneyCreditedEvent.creditAmount) >= 0) {
+            AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
+        }
+
+        this.accountBalance += moneyCreditedEvent.creditAmount;
+    }
 }
