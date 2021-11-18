@@ -1,6 +1,7 @@
 package com.hendisantika.handler;
 
 import com.hendisantika.aggregate.AccountAggregate;
+import com.hendisantika.entity.AccountQueryEntity;
 import com.hendisantika.event.BaseEvent;
 import com.hendisantika.repository.AccountRepository;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -37,4 +38,8 @@ public class AccountQueryEntityManager {
         return accountAggregateEventSourcingRepository.load(event.id.toString()).getWrappedAggregate().getAggregateRoot();
     }
 
+    private AccountQueryEntity findExistingOrCreateQueryAccount(String id) {
+        return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() :
+                new AccountQueryEntity();
+    }
 }
