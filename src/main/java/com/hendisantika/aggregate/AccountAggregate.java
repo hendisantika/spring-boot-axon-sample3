@@ -1,9 +1,11 @@
 package com.hendisantika.aggregate;
 
 import com.hendisantika.command.CreateAccountCommand;
+import com.hendisantika.event.AccountActivatedEvent;
 import com.hendisantika.event.AccountCreatedEvent;
 import lombok.Data;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -33,5 +35,15 @@ public class AccountAggregate {
     public AccountAggregate(CreateAccountCommand createAccountCommand) {
         AggregateLifecycle.apply(new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance
                 , createAccountCommand.currency));
+    }
+
+    @EventSourcingHandler
+    protected void on(AccountCreatedEvent accountCreatedEvent) {
+        this.id = accountCreatedEvent.id;
+        this.accountBalance = accountCreatedEvent.accountBalance;
+        this.currency = accountCreatedEvent.currency;
+        this.status = String.valueOf(Status.CREATED);
+
+        AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
     }
 }
