@@ -89,4 +89,9 @@ public class AccountAggregate {
         this.accountBalance -= moneyDebitedEvent.debitAmount;
 
     }
+
+    @EventSourcingHandler
+    protected void on(AccountHeldEvent accountHeldEvent) {
+        this.status = String.valueOf(accountHeldEvent.status);
+    }
 }
