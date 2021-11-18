@@ -1,9 +1,14 @@
 package com.hendisantika.controller;
 
+import com.hendisantika.dto.AccountCreateDTO;
 import com.hendisantika.service.command.AccountCommandService;
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,5 +28,10 @@ public class AccountCommandController {
 
     public AccountCommandController(AccountCommandService accountCommandService) {
         this.accountCommandService = accountCommandService;
+    }
+
+    @PostMapping
+    public CompletableFuture<String> createAccount(@RequestBody AccountCreateDTO accountCreateDTO) {
+        return accountCommandService.createAccount(accountCreateDTO);
     }
 }
