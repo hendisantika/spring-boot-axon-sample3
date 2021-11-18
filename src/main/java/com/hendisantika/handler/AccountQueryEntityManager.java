@@ -33,5 +33,8 @@ public class AccountQueryEntityManager {
         persistAccount(buildQueryAccount(getAccountFromEvent(event)));
     }
 
+    private AccountAggregate getAccountFromEvent(BaseEvent event) {
+        return accountAggregateEventSourcingRepository.load(event.id.toString()).getWrappedAggregate().getAggregateRoot();
+    }
 
 }
